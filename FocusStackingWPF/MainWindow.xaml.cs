@@ -30,7 +30,7 @@ namespace FocusStackingWPF
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Images (*.BMP;*.JPG;*.GIF;*.TIFF)|*.BMP;*.JPG;*.GIF|*.TIFF|" +
+            openFileDialog.Filter = "Images (*.BMP;*.JPG;*.GIF;*.TIFF)|*.BMP;*.JPG;*.GIF;*.TIFF|" +
             "All files (*.*)|*.*";
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
@@ -42,19 +42,17 @@ namespace FocusStackingWPF
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            string fName = "";
             try
-            {
-                PictureBox pb = new PictureBox();
-                Image loadedImage = Image.FromFile(file);
-                pb.Height = loadedImage.Height;
-                pb.Width = loadedImage.Width;
-                pb.Image = loadedImage;
-                flowLayoutPanel1.Controls.Add(pb);
+            {     
+                fName = e.AddedItems[0].ToString();
+                Uri fileUri = new Uri(fName);
+                this.image_Start.Source = new BitmapImage(fileUri);
             }
             catch (Exception ex)
             {
                 // Could not load the image - probably related to Windows file system permissions.
-                MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
+                MessageBox.Show("Cannot display the image: " + fName.Substring(fName.LastIndexOf('\\'))
                     + ". You may not have permission to read the file, or " +
                     "it may be corrupt.\n\nReported error: " + ex.Message);
             }
