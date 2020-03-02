@@ -57,5 +57,15 @@ namespace FocusStackingWPF
                     "it may be corrupt.\n\nReported error: " + ex.Message);
             }
         }
+
+        private void Button_Start_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Save_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
