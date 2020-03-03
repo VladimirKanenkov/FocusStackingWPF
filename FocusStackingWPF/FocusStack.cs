@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
-using Emgu.CV.Structure;
 using Emgu.Util;
 
 namespace Emgu.CV
@@ -16,7 +15,7 @@ namespace Emgu.CV
     /// <summary>
     /// The base class algorithms that can merge exposure sequence to a single image.
     /// </summary>
-    public abstract class MergeExposures : UnmanagedObject
+    public abstract class Merge_Exposures : UnmanagedObject
     {
         /// <summary>
         /// The pointer to the unmanaged MergeExposure object
@@ -37,7 +36,7 @@ namespace Emgu.CV
             using (InputArray iaTimes = times.GetInputArray())
             using (InputArray iaResponse = response.GetInputArray())
             {
-                CvInvoke.cveMergeExposuresProcess(_mergeExposuresPtr, iaSrc, oaDst, iaTimes, iaResponse);
+                Cv_Invoke.cveMergeExposuresProcess(_mergeExposuresPtr, iaSrc, oaDst, iaTimes, iaResponse);
             }
         }
 
@@ -53,7 +52,7 @@ namespace Emgu.CV
     /// <summary>
     /// The resulting HDR image is calculated as weighted average of the exposures considering exposure values and camera response.
     /// </summary>
-    public class MergeDebevec : MergeExposures
+    public class MergeDebevec : Merge_Exposures
     {
         private IntPtr _sharedPtr;
 
@@ -62,7 +61,7 @@ namespace Emgu.CV
         /// </summary>
         public MergeDebevec()
         {
-            _ptr = CvInvoke.cveMergeDebevecCreate(ref _mergeExposuresPtr, ref _sharedPtr);
+            _ptr = Cv_Invoke.cveMergeDebevecCreate(ref _mergeExposuresPtr, ref _sharedPtr);
         }
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace Emgu.CV
         {
             if (IntPtr.Zero != _ptr)
             {
-                CvInvoke.cveMergeDebevecRelease(ref _ptr, ref _sharedPtr);
+                Cv_Invoke.cveMergeDebevecRelease(ref _ptr, ref _sharedPtr);
             }
 
             base.DisposeObject();
@@ -85,7 +84,7 @@ namespace Emgu.CV
     /// The resulting image weight is constructed as weighted average of contrast, saturation and well-exposedness measures.
     /// The resulting image doesn't require tonemapping and can be converted to 8-bit image by multiplying by 255, but it's recommended to apply gamma correction and/or linear tonemapping.
     /// </summary>
-    public class MergeMertens : MergeExposures
+    public class MergeMertens : Merge_Exposures
     {
         private IntPtr _sharedPtr;
 
@@ -97,7 +96,7 @@ namespace Emgu.CV
         /// <param name="exposureWeight">well-exposedness measure weight</param>
         public MergeMertens(float contrastWeight = 1.0f, float saturationWeight = 1.0f, float exposureWeight = 0.0f)
         {
-            _ptr = CvInvoke.cveMergeMertensCreate(contrastWeight, saturationWeight, exposureWeight, ref _mergeExposuresPtr, ref _sharedPtr);
+            _ptr = Cv_Invoke.cveMergeMertensCreate(contrastWeight, saturationWeight, exposureWeight, ref _mergeExposuresPtr, ref _sharedPtr);
         }
 
         /// <summary>
@@ -112,7 +111,7 @@ namespace Emgu.CV
             using (InputArray iaTimes = InputArray.GetEmpty())
             using (InputArray iaResponse = InputArray.GetEmpty())
             {
-                CvInvoke.cveMergeExposuresProcess(_mergeExposuresPtr, iaSrc, oaDst, iaTimes, iaResponse);
+                Cv_Invoke.cveMergeExposuresProcess(_mergeExposuresPtr, iaSrc, oaDst, iaTimes, iaResponse);
             }
         }
 
@@ -123,7 +122,7 @@ namespace Emgu.CV
         {
             if (IntPtr.Zero != _ptr)
             {
-                CvInvoke.cveMergeMertensRelease(ref _ptr, ref _sharedPtr);
+                Cv_Invoke.cveMergeMertensRelease(ref _ptr, ref _sharedPtr);
             }
 
             base.DisposeObject();
@@ -133,7 +132,7 @@ namespace Emgu.CV
     /// <summary>
     /// The resulting HDR image is calculated as weighted average of the exposures considering exposure values and camera response
     /// </summary>
-    public class MergeRobertson : MergeExposures
+    public class MergeRobertson : Merge_Exposures
     {
         private IntPtr _sharedPtr;
 
@@ -142,7 +141,7 @@ namespace Emgu.CV
         /// </summary>
         public MergeRobertson()
         {
-            _ptr = CvInvoke.cveMergeRobertsonCreate(ref _mergeExposuresPtr, ref _sharedPtr);
+            _ptr = Cv_Invoke.cveMergeRobertsonCreate(ref _mergeExposuresPtr, ref _sharedPtr);
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace Emgu.CV
         {
             if (IntPtr.Zero != _ptr)
             {
-                CvInvoke.cveMergeRobertsonRelease(ref _ptr, ref _sharedPtr);
+                Cv_Invoke.cveMergeRobertsonRelease(ref _ptr, ref _sharedPtr);
             }
 
             base.DisposeObject();
@@ -160,11 +159,9 @@ namespace Emgu.CV
     }
 
 
-    public static partial class CvInvoke
+    public static partial class Cv_Invoke
     {
-#pragma warning disable CS0436 // Тип конфликтует с импортированным типом
         [DllImport(CvInvoke.ExternLibrary, CallingConvention = CvInvoke.CvCallingConvention)]
-#pragma warning restore CS0436 // Тип конфликтует с импортированным типом
         internal static extern void cveMergeExposuresProcess(
            IntPtr mergeExposures,
            IntPtr src, IntPtr dst,

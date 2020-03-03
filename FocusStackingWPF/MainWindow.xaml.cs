@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace FocusStackingWPF
 {
@@ -51,7 +53,6 @@ namespace FocusStackingWPF
             }
             catch (Exception ex)
             {
-                // Could not load the image - probably related to Windows file system permissions.
                 MessageBox.Show("Cannot display the image: " + fName.Substring(fName.LastIndexOf('\\'))
                     + ". You may not have permission to read the file, or " +
                     "it may be corrupt.\n\nReported error: " + ex.Message);
@@ -60,6 +61,15 @@ namespace FocusStackingWPF
 
         private void Button_Start_Click(object sender, RoutedEventArgs e)
         {
+            //InputArray[] arr = new InputArray();
+            //IInputArray src = arr;
+            Mat img1 = new Mat(@"C:\DI_PLOT\Bitmaps\img_C.TIF");
+            Image<Bgr, Byte> image1 = new Image<Bgr, byte>(@"C:\imgoflder\Bitmaps\img_C.TIF");
+            Image<Bgr, Byte> image2 = new Image<Bgr, byte>(@"C:\imgoflder\Bitmaps\img_M.TIF");
+            Image<Bgr, Byte> image3 = new Image<Bgr, byte>(@"C:\imgoflder\Bitmaps\img_Y.TIF");
+            Image<Bgr, Byte> image4 = new Image<Bgr, byte>(@"C:\imgoflder\Bitmaps\img_K.TIF");
+            Image<Bgr, Byte> image5 = image1 + image2 + image3 + image4;
+            image5.Save(@"something.TIF");
 
         }
 
